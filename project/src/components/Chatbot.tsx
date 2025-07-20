@@ -134,49 +134,73 @@ export default function Chatbot({ config = {} }: ChatbotProps) {
       });
 
       const response = await fetch(`${finalConfig.webhookUrl}?${queryParams.toString()}`);
-      const rawText = await response.text();
+      const data = await response.json();
       
-      let responseText = rawText;
+      let responseText = '';
       let shouldShowBooking = false;
 
-      try {
-        const jsonData = JSON.parse(rawText);
-        if (typeof jsonData === 'object' && jsonData !== null) {
-          if (typeof jsonData.output === 'string') {
-            try {
-              const innerData = JSON.parse(jsonData.output);
-              if (typeof innerData === 'object' && innerData !== null) {
-                if (innerData.showBookingPopup === true) {
-                  shouldShowBooking = true;
-                  responseText = '**Booking System**\nOur Booking System will show in a moment!';
-                }
-                // Check if n8n provides language information
-                if (innerData.language) {
-                  setCurrentLanguage(innerData.language as LanguageCode);
-                }
-              }
-            } catch (innerError) {
-              responseText = jsonData.output;
+      // Handle the response from n8n webhook
+      if (data.response) {
+        responseText = data.response;
+      }
+
+      // Check if we should show booking popup
+      if (data.showBookingPopup) {
+        shouldShowBooking = true;
+        if (!responseText) {
+          responseText = '**Booking System**\nOur Booking System will show in a moment!';
+        }
+      }
+
+      // Handle nested JSON responses
+      if (typeof data.output === 'string') {
+        try {
+          const innerData = JSON.parse(data.output);
+          if (typeof innerData === 'object' && innerData !== null) {
+            if (innerData.showBookingPopup === true) {
+              shouldShowBooking = true;
+              responseText = '**Booking System**\nOur Booking System will show in a moment!';
             }
-          } else if (jsonData.showBookingPopup === true) {
+            if (innerData.response) {
+              responseText = innerData.response;
+            }
+            // Check if n8n provides language information
+            if (innerData.language) {
+              setCurrentLanguage(innerData.language as LanguageCode);
+            }
+          }
+        } catch (innerError) {
+          responseText = data.output;
+        }
+      }
+
+      // Try to parse the entire response as JSON if it's a string
+      if (typeof data === 'string') {
+        try {
+          const parsedData = JSON.parse(data);
+          if (parsedData.showBookingPopup === true) {
             shouldShowBooking = true;
             responseText = '**Booking System**\nOur Booking System will show in a moment!';
-          } else if (typeof jsonData.response === 'string') {
-            responseText = jsonData.response;
           }
-
-          // If n8n response doesn't specify language, detect it from the response text
-          if (responseText && !jsonData.language) {
-            handleLanguageDetection(responseText);
+          if (parsedData.response) {
+            responseText = parsedData.response;
           }
-          
-          responseText = responseText
-            .replace(/\n/g, '<br/>')
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*(.*?)\*/g, '<em>$1</em>');
+        } catch (parseError) {
+          responseText = data;
         }
-      } catch (parseError) {
-        console.log('Failed to parse JSON:', parseError);
+      }
+
+      // If n8n response doesn't specify language, detect it from the response text
+      if (responseText && !data.language) {
+        handleLanguageDetection(responseText);
+      }
+      
+      // Format the response text with basic markdown
+      if (responseText) {
+        responseText = responseText
+          .replace(/\n/g, '<br/>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.*?)\*/g, '<em>$1</em>');
       }
 
       const botMessage: ChatMessage = {
@@ -194,7 +218,7 @@ export default function Chatbot({ config = {} }: ChatbotProps) {
       console.error('Error:', error);
       const errorMessage: ChatMessage = {
         id: generateMessageId(),
-        content: t.errorMessage,
+        content: 'Sorry, there was an error processing your message.',
         type: 'bot',
         timestamp: new Date()
       };
@@ -213,7 +237,9 @@ export default function Chatbot({ config = {} }: ChatbotProps) {
 
   const handleQuickAction = (message: string) => {
     setInputValue(message);
-    handleSendMessage();
+    setTimeout(() => {
+      handleSendMessage();
+    }, 100);
   };
 
   return (
