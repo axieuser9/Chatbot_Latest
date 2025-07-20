@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Axie Studio Chat</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="chat-container" class="chat-container">
+        <div class="chat-header">
+            <img src="https://www.axiestudio.se/logo.jpg" alt="Axie Studio Logo" class="chat-logo">
+            <h1>Axie Studio Chat</h1>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input-container">
+            <textarea id="chat-input" placeholder="Type your message..."></textarea>
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <!-- Enhanced Booking Modal -->
+    <div id="booking-modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Book a Meeting</h2>
+                <button class="close-button" aria-label="Close booking modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe 
+                    id="booking-iframe" 
+                    title="Booking Calendar"
+                    frameborder="0"
+                    loading="lazy"
+                    allow="camera; microphone; autoplay; fullscreen">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
