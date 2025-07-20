@@ -129,8 +129,7 @@ export default function Chatbot({ config = {} }: ChatbotProps) {
       const queryParams = new URLSearchParams({
         message: message,
         sessionId: sessionId,
-        time: new Date().toISOString(),
-        language: detectedLanguage
+        time: new Date().toISOString()
       });
 
       const response = await fetch(`${finalConfig.webhookUrl}?${queryParams.toString()}`);
@@ -139,7 +138,7 @@ export default function Chatbot({ config = {} }: ChatbotProps) {
       let responseText = '';
       let shouldShowBooking = false;
 
-      // Handle the response from n8n webhook
+      // Handle the response from n8n webhook - based on script.js logic
       if (data.response) {
         responseText = data.response;
       }
@@ -147,9 +146,6 @@ export default function Chatbot({ config = {} }: ChatbotProps) {
       // Check if we should show booking popup
       if (data.showBookingPopup) {
         shouldShowBooking = true;
-        if (!responseText) {
-          responseText = '**Booking System**\nOur Booking System will show in a moment!';
-        }
       }
 
       // Handle nested JSON responses
@@ -159,14 +155,9 @@ export default function Chatbot({ config = {} }: ChatbotProps) {
           if (typeof innerData === 'object' && innerData !== null) {
             if (innerData.showBookingPopup === true) {
               shouldShowBooking = true;
-              responseText = '**Booking System**\nOur Booking System will show in a moment!';
             }
             if (innerData.response) {
               responseText = innerData.response;
-            }
-            // Check if n8n provides language information
-            if (innerData.language) {
-              setCurrentLanguage(innerData.language as LanguageCode);
             }
           }
         } catch (innerError) {
@@ -180,7 +171,6 @@ export default function Chatbot({ config = {} }: ChatbotProps) {
           const parsedData = JSON.parse(data);
           if (parsedData.showBookingPopup === true) {
             shouldShowBooking = true;
-            responseText = '**Booking System**\nOur Booking System will show in a moment!';
           }
           if (parsedData.response) {
             responseText = parsedData.response;
@@ -188,11 +178,6 @@ export default function Chatbot({ config = {} }: ChatbotProps) {
         } catch (parseError) {
           responseText = data;
         }
-      }
-
-      // If n8n response doesn't specify language, detect it from the response text
-      if (responseText && !data.language) {
-        handleLanguageDetection(responseText);
       }
       
       // Format the response text with basic markdown
@@ -205,7 +190,7 @@ export default function Chatbot({ config = {} }: ChatbotProps) {
 
       const botMessage: ChatMessage = {
         id: generateMessageId(),
-        content: responseText || t.errorMessage,
+        content: responseText || 'Sorry, there was an error processing your message.',
         type: 'bot',
         timestamp: new Date()
       };
