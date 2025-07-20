@@ -1,4 +1,4 @@
-import Chatbot from './components/Chatbot';
+import Chatbot from './components/Chatbot'
 
 export default function App() {
   return (
@@ -8,5 +8,5 @@ export default function App() {
         subtitle: 'Axie kan hjälpa dig att navigera, förstå eller hantera dina bokningar!'
       }}
     />
-  );
+  )
 }
