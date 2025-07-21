@@ -4,7 +4,7 @@ import { ChatMessage, ChatbotConfig, translations } from '../../types/chat';
 import { detectLanguage, generateMessageId, LanguageCode } from '../../lib/utils';
 import { theme } from '../../styles/theme';
 import ChatHeader from './ChatHeader';
-import ChatMessage as ChatMessageComponent from './ChatMessage';
+import ChatMessageComponent from './ChatMessage';
 import ChatInput from './ChatInput';
 import BookingModal from './BookingModal';
 
