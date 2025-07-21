@@ -42,7 +42,7 @@ export default function Hero() {
                 backgroundImage: `linear-gradient(135deg, ${theme.colors.accent.green[400]}, ${theme.colors.accent.lavender[400]})`
               }}
             >
-              Din Digitala Framgång
+              Din Digitala Framgång, Förenklad
             </span>
           </h1>
 
@@ -51,14 +51,14 @@ export default function Hero() {
             className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto leading-relaxed"
             style={{ color: theme.colors.secondary.gray[300] }}
           >
-            Vi skapar inte bara digitala lösningar - vi bygger relationer och levererar resultat 
-            som driver ditt företag framåt med hjärta och passion.
+            Vi skapar inte bara digitala lösningar - vi bygger relationer och levererar resultat som 
+            driver ditt företag framåt med hjärta och passion. Från första idé till färdig lösning.
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-16">
             <button 
-              className="px-8 py-4 rounded-xl font-semibold text-white transition-all duration-300 hover:shadow-2xl transform hover:scale-105 flex items-center space-x-2"
+              className="px-8 py-4 rounded-xl font-semibold text-white transition-all duration-300 hover:shadow-2xl transform hover:scale-105 flex items-center space-x-2 text-lg"
               style={{
                 background: `linear-gradient(135deg, ${theme.colors.accent.green[500]}, ${theme.colors.accent.green[600]})`
               }}
@@ -68,7 +68,7 @@ export default function Hero() {
             </button>
             
             <button 
-              className="px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg border-2"
+              className="px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg border-2 text-lg hover:bg-white/10"
               style={{
                 color: theme.colors.secondary.white,
                 borderColor: theme.colors.secondary.gray[600],
