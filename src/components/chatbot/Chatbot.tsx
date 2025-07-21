@@ -67,6 +67,7 @@ export default function Chatbot({ config = {} }: ChatbotProps) {
   const finalConfig = { ...defaultConfig, ...config };
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(finalConfig.language || 'sv');
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
   const t = translations[currentLanguage];
   
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -231,6 +232,28 @@ export default function Chatbot({ config = {} }: ChatbotProps) {
       handleSendMessage();
     }, 100);
   };
+
+  if (isMinimized) {
+    return (
+      <div className="fixed bottom-6 right-6 z-50">
+        <button
+          onClick={() => setIsMinimized(false)}
+          className="p-4 rounded-full shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 group text-white"
+          style={{
+            background: `linear-gradient(135deg, ${theme.colors.accent.green[500]}, ${theme.colors.accent.lavender[500]})`
+          }}
+        >
+          <MessageCircle size={24} className="group-hover:rotate-12 transition-transform duration-300" />
+          <div 
+            className="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold animate-pulse"
+            style={{ backgroundColor: theme.colors.status.online }}
+          >
+            {messages.filter(m => m.type === 'bot').length}
+          </div>
+        </button>
+      </div>
+    );
+  }
 
   if (isMinimized) {
     return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bot, Minimize2 } from 'lucide-react';
+import { Bot, Minus } from 'lucide-react';
 import { theme } from '../../styles/theme';
 
 interface ChatHeaderProps {
@@ -30,10 +30,10 @@ export default function ChatHeader({ title, subtitle, onMinimize }: ChatHeaderPr
       </div>
       <button
         onClick={onMinimize}
-        className="p-2 rounded-lg transition-all duration-200 hover:bg-white/20"
+        className="p-2 rounded-lg transition-all duration-200 hover:bg-white/20 hover:scale-110"
         style={{ color: 'rgba(255, 255, 255, 0.8)' }}
       >
-        <Minimize2 size={18} />
+        <Minus size={18} />
       </button>
     </div>
   );
